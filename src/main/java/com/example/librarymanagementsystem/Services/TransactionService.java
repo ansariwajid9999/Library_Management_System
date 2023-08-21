@@ -16,7 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -40,7 +45,6 @@ public class TransactionService {
     public String issueBook(Integer bookId,Integer cardId)throws Exception{
 
         //Book Related Exception Handling
-
         Transaction transaction = new Transaction(TransactionStatus.PENDING, TransactionType.ISSUE,0);
 
         Optional<Book> optionalBook = bookRepository.findById(bookId);
@@ -51,7 +55,6 @@ public class TransactionService {
         if(book.getIsAvailable()==Boolean.FALSE){
             throw new BookNotAvailableException("Book is not Avaialble");
         }
-
 
         //Card Related Exception Handling
         Optional<LibraryCard> optionalLibraryCard = cardRepository.findById(cardId);
@@ -89,7 +92,6 @@ public class TransactionService {
         transaction.setBook(book);
         transaction.setLibraryCard(card);
 
-
         Transaction newTransactionWithId = transactionRepository.save(transaction);
 
         //We need to do in the parent classes
@@ -97,14 +99,71 @@ public class TransactionService {
 
         card.getTransactionList().add(newTransactionWithId);
 
-
         bookRepository.save(book);
         cardRepository.save(card);
 
         //What all needs to saved
         return "Transaction has been saved successfully";
 
-
     }
+    public String returnBook(Integer bookId,Integer cardId){
+
+        Book book = bookRepository.findById(bookId).get();
+        LibraryCard card = cardRepository.findById(cardId).get();
+
+
+        List<Transaction> transactionList = transactionRepository.findTransactionsByBookAndLibraryCardAndTransactionStatusAndTransactionType(book,card,TransactionStatus.SUCCESS,TransactionType.ISSUE);
+
+        Transaction latestTransaction = transactionList.get(transactionList.size()-1);
+
+        Date issueDate = latestTransaction.getCreatedAt();
+
+        long milliSecondTime = Math.abs(System.currentTimeMillis() - issueDate.getTime());
+        long no_of_days_issued = TimeUnit.DAYS.convert(milliSecondTime,TimeUnit.MILLISECONDS);
+
+
+        int fineAmount = 0;
+        if(no_of_days_issued>15){
+            fineAmount = (int) ((no_of_days_issued - 15)*5);
+        }
+
+        book.setIsAvailable(Boolean.TRUE);
+        card.setNoOfBooksIssued(card.getNoOfBooksIssued()-1);
+
+        Transaction transaction = new Transaction(TransactionStatus.SUCCESS,TransactionType.RETURN,fineAmount);
+
+        transaction.setBook(book);
+        transaction.setLibraryCard(card);
+
+
+        Transaction newTransactionWithId = transactionRepository.save(transaction);
+
+        book.getTransactionList().add(newTransactionWithId);
+        card.getTransactionList().add(newTransactionWithId);
+
+        //Saving the parents
+        bookRepository.save(book);
+        cardRepository.save(card);
+
+        return "Book has successfully been returned";
+    }
+
+
+    public Integer totalFineCollected()throws Exception{
+        List<Transaction> transactionList = transactionRepository.findAll();
+        if(transactionList==null || transactionList.isEmpty()){
+            throw new Exception("There are no transactions Present");
+        }
+        int cnt=0;
+        for(Transaction transaction:transactionList) {
+            Date date=transaction.getCreatedAt();
+            Integer year=date.getYear()+1900;
+            if(year.equals(2023)){
+                cnt+= transaction.getFineAmount();
+            }
+        }
+        return cnt;
+    }
+
 
 }

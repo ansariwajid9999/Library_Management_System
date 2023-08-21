@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/card")
 @Slf4j
@@ -51,6 +53,17 @@ public class CardController {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
         }
 
+    }
+    @GetMapping("/CardNotActive")
+    public ResponseEntity<List> CardNotActive(){
+
+        try{
+            List<String> name = cardService.CardNotActive();
+            return new ResponseEntity<>(name,HttpStatus.OK);
+        }catch (Exception e){
+            log.error("All cards are ACTIVE {}",e.getMessage());
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        }
     }
 
 

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/student")
 @Slf4j
@@ -43,6 +45,18 @@ public class StudentController {
             return new ResponseEntity(department,HttpStatus.OK);
         }catch (Exception e){
             log.error("Department not found/Invalid Request {}",e.getMessage());
+            return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/whoReadMostBook")
+    public ResponseEntity whoReadMostBook(){
+
+        try{
+            String StudentName = studentService.whoReadMostBook();
+            return new ResponseEntity(StudentName,HttpStatus.OK);
+        }catch (Exception e){
+            log.error("No Student Found",e.getMessage());
             return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,11 +1,13 @@
 package com.example.librarymanagementsystem.Services;
 
 import com.example.librarymanagementsystem.Enums.Department;
+import com.example.librarymanagementsystem.Models.LibraryCard;
 import com.example.librarymanagementsystem.Models.Student;
 import com.example.librarymanagementsystem.Repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +35,19 @@ public class StudentService {
         Student student = optionalStudent.get();
 
         return student.getDepartment();
+    }
+
+    public String whoReadMostBook(){
+        int max = Integer.MIN_VALUE;
+        String Name = null;
+        List<Student> students = studentRepository.findAll();
+        for(Student student : students){
+            if(student.getLibraryCard().getNoOfBooksIssued() > max){
+                max=student.getLibraryCard().getNoOfBooksIssued();
+                Name=student.getName();
+            }
+        }
+        return Name;
     }
 
 }

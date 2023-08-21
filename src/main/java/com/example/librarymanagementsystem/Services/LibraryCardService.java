@@ -8,6 +8,8 @@ import com.example.librarymanagementsystem.Repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -80,4 +82,17 @@ public class LibraryCardService {
 
     }
 
+    public List<String> CardNotActive(){
+
+        List<LibraryCard> allCards = cardRepository.findAll();
+        List<String> studentName = new ArrayList<>();
+
+        for(LibraryCard card : allCards){
+            if(card.getCardStatus() != CardStatus.ACTIVE){
+                Student student = card.getStudent();
+                studentName.add(student.getName());
+            }
+        }
+        return studentName;
+     }
 }
