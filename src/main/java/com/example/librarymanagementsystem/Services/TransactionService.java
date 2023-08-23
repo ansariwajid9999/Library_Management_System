@@ -7,6 +7,7 @@ import com.example.librarymanagementsystem.Enums.TransactionStatus;
 import com.example.librarymanagementsystem.Enums.TransactionType;
 import com.example.librarymanagementsystem.Models.Book;
 import com.example.librarymanagementsystem.Models.LibraryCard;
+import com.example.librarymanagementsystem.Models.Student;
 import com.example.librarymanagementsystem.Models.Transaction;
 import com.example.librarymanagementsystem.Repositories.AuthorRepository;
 import com.example.librarymanagementsystem.Repositories.BookRepository;
@@ -17,11 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static com.example.librarymanagementsystem.Enums.TransactionStatus.SUCCESS;
 
 @Service
 public class TransactionService {
@@ -82,7 +82,7 @@ public class TransactionService {
 
         //We have reached at a success point
 
-        transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+        transaction.setTransactionStatus(SUCCESS);
 
         //update the card and book Entity
         book.setIsAvailable(Boolean.FALSE);
@@ -112,7 +112,7 @@ public class TransactionService {
         LibraryCard card = cardRepository.findById(cardId).get();
 
 
-        List<Transaction> transactionList = transactionRepository.findTransactionsByBookAndLibraryCardAndTransactionStatusAndTransactionType(book,card,TransactionStatus.SUCCESS,TransactionType.ISSUE);
+        List<Transaction> transactionList = transactionRepository.findTransactionsByBookAndLibraryCardAndTransactionStatusAndTransactionType(book,card, SUCCESS,TransactionType.ISSUE);
 
         Transaction latestTransaction = transactionList.get(transactionList.size()-1);
 
@@ -130,7 +130,7 @@ public class TransactionService {
         book.setIsAvailable(Boolean.TRUE);
         card.setNoOfBooksIssued(card.getNoOfBooksIssued()-1);
 
-        Transaction transaction = new Transaction(TransactionStatus.SUCCESS,TransactionType.RETURN,fineAmount);
+        Transaction transaction = new Transaction(SUCCESS,TransactionType.RETURN,fineAmount);
 
         transaction.setBook(book);
         transaction.setLibraryCard(card);
@@ -148,6 +148,17 @@ public class TransactionService {
         return "Book has successfully been returned";
     }
 
+    public int numberOfBooksRead(Student student){
+        List<Transaction>transactions=transactionRepository.findByLibraryCard_Student(student);
+        Set<Book> bookSet=new HashSet<>();
+        for(Transaction transaction:transactions){
+            if(transaction.getTransactionType().equals(TransactionType.ISSUE) && transaction.getTransactionStatus().equals(SUCCESS)){
+                bookSet.add(transaction.getBook());
+            }
+        }
+        return bookSet.size();
+    }
+}
 
     public Integer totalFineCollected()throws Exception{
         List<Transaction> transactionList = transactionRepository.findAll();

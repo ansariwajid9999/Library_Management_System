@@ -37,17 +37,4 @@ public class StudentService {
         return student.getDepartment();
     }
 
-    public String whoReadMostBook(){
-        int max = Integer.MIN_VALUE;
-        String Name = null;
-        List<Student> students = studentRepository.findAll();
-        for(Student student : students){
-            if(student.getLibraryCard().getNoOfBooksIssued() > max){
-                max=student.getLibraryCard().getNoOfBooksIssued();
-                Name=student.getName();
-            }
-        }
-        return Name;
-    }
-
 }

@@ -46,7 +46,7 @@ public class BookService {
 
         //Set the FK variables
 
-        //Since its a bidirectional : need to set both in child and parent class
+        //Since it's a bidirectional : need to set both in child and parent class
 
         //Set the parent entity in child class
         book.setAuthor(author);
@@ -93,35 +93,6 @@ public class BookService {
             responseList.add(bookResponseDto);
         }
         return responseList;
-    }
-
-    public bookContainMostFineAmount bookHasMaxFine() throws Exception{
-
-        bookContainMostFineAmount MaxFineAmount = null;
-        List<Book> list = bookRepository.findAll();
-        if(list==null)throw new Exception("There is No Book Found having FineAmount");
-
-        List<Book> bookList = new ArrayList<>();
-        int max=Integer.MIN_VALUE;
-        for(Book book : list){
-            int cnt=0;
-            List<Transaction> transaction = book.getTransactionList();
-            for(Transaction transactions : transaction){
-                cnt += transactions.getFineAmount();
-            }
-            if(cnt >= max){
-                bookList.add(book);
-                max=cnt;
-            }
-        }
-        List<String> bookListName = new ArrayList<>();
-        for(Book book : bookList){
-            bookListName.add(book.getTitle());
-        }
-        Collections.sort(bookListName);
-        MaxFineAmount.setAmount(max);
-        MaxFineAmount.setTitle(bookListName.get(0));
-        return MaxFineAmount;
     }
 
 

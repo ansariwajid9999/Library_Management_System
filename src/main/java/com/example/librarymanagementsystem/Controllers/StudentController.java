@@ -49,15 +49,4 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/whoReadMostBook")
-    public ResponseEntity whoReadMostBook(){
-
-        try{
-            String StudentName = studentService.whoReadMostBook();
-            return new ResponseEntity(StudentName,HttpStatus.OK);
-        }catch (Exception e){
-            log.error("No Student Found",e.getMessage());
-            return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
-        }
-    }
 }

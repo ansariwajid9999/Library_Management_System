@@ -51,15 +51,5 @@ public class BookController {
         }
 
     }
-    @GetMapping("/bookHasMaxFine")
-    public ResponseEntity<bookContainMostFineAmount> bookHasMaxFine(){
-
-        try{
-            bookContainMostFineAmount bookName = bookService.bookHasMaxFine();
-            return new ResponseEntity<>(bookName,HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-        }
-    }
 
 }

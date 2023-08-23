@@ -1,7 +1,9 @@
 package com.example.librarymanagementsystem.Controllers;
 
 
+import com.example.librarymanagementsystem.Models.Student;
 import com.example.librarymanagementsystem.Services.TransactionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transactions")
+@Slf4j
 public class TransactionController {
 
     @Autowired
