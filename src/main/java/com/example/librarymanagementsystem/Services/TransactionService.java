@@ -9,10 +9,7 @@ import com.example.librarymanagementsystem.Models.Book;
 import com.example.librarymanagementsystem.Models.LibraryCard;
 import com.example.librarymanagementsystem.Models.Student;
 import com.example.librarymanagementsystem.Models.Transaction;
-import com.example.librarymanagementsystem.Repositories.AuthorRepository;
-import com.example.librarymanagementsystem.Repositories.BookRepository;
-import com.example.librarymanagementsystem.Repositories.CardRepository;
-import com.example.librarymanagementsystem.Repositories.TransactionRepository;
+import com.example.librarymanagementsystem.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,8 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private StudentRepository studentRepository;
 
     @Value("${book.maxLimit}")
     private Integer maxBookLimit;
@@ -148,18 +147,6 @@ public class TransactionService {
         return "Book has successfully been returned";
     }
 
-    public int numberOfBooksRead(Student student){
-        List<Transaction>transactions=transactionRepository.findByLibraryCard_Student(student);
-        Set<Book> bookSet=new HashSet<>();
-        for(Transaction transaction:transactions){
-            if(transaction.getTransactionType().equals(TransactionType.ISSUE) && transaction.getTransactionStatus().equals(SUCCESS)){
-                bookSet.add(transaction.getBook());
-            }
-        }
-        return bookSet.size();
-    }
-}
-
     public Integer totalFineCollected()throws Exception{
         List<Transaction> transactionList = transactionRepository.findAll();
         if(transactionList==null || transactionList.isEmpty()){
@@ -176,5 +163,39 @@ public class TransactionService {
         return cnt;
     }
 
+    public Student findWhoReadMoreBooks()throws Exception{
+        List<Student>students=studentRepository.findAll();
 
+
+//the for each student find the number of books Read using Transactions..
+        if(students.isEmpty())throw new Exception("Student Not Found");
+        int max=0;
+        Student ansStudent=null;
+        for(Student student :students)
+        {
+            int noOfBooksRead=numberOfBooksRead(student);
+            if(noOfBooksRead>max){
+                max=noOfBooksRead;
+                ansStudent=student;
+            }
+        }
+
+
+        if(ansStudent==null)throw new Exception("There is No Student who reads Book Exception {} :)");
+        return ansStudent;
+    }
+
+
+    public int numberOfBooksRead(Student student){
+        List<Transaction>transactions=transactionRepository.findByLibraryCard_Student(student);
+        Set<Book> bookSet=new HashSet<>();
+        for(Transaction transaction:transactions)
+        {
+            if(transaction.getTransactionType().equals(TransactionType.ISSUE) && transaction.getTransactionStatus().equals(SUCCESS)){
+                bookSet.add(transaction.getBook());
+            }
+        }
+        return bookSet.size();
+    }
 }
+

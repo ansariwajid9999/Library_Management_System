@@ -47,5 +47,18 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/getStudentWhoReadMoreBooks")
+    public ResponseEntity getStudentWhoReadMoreBookds(){
+        try{
+            Student student=transactionService.findWhoReadMoreBooks();
+            return new ResponseEntity(student,HttpStatus.OK);
+        }
+        catch (Exception e){
+            log.error("Oops Something Went Wrong {}"+e.getMessage());
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 }
