@@ -60,7 +60,7 @@ public class BookController {
     @GetMapping("/get-book-amt")
     public bookContainMostFineAmount findBookFine(){
         try{
-            bookContainMostFineAmount getMaxFineBookDto= bookRepository.findMaxBook();
+            bookContainMostFineAmount getMaxFineBookDto= bookService.findMaxBook();
             return getMaxFineBookDto;
         }
         catch (Exception e){
