@@ -73,9 +73,11 @@ public class AuthorController {
         try{
             Author author=authorService.getAuthorByAuthorId(authorId);
             return new ResponseEntity(author,HttpStatus.ACCEPTED);
+
         }
         catch (Exception e){
             return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+
         }
     }
 
