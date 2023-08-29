@@ -77,7 +77,6 @@ public class AuthorController {
         }
         catch (Exception e){
             return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
-
         }
     }
 
