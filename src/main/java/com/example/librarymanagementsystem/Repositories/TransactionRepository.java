@@ -16,4 +16,5 @@ public interface TransactionRepository extends JpaRepository<Transaction,Integer
     List<Transaction> findTransactionsByBookAndLibraryCardAndTransactionStatusAndTransactionType(Book book, LibraryCard card, TransactionStatus transactionStatus, TransactionType transactionType);
     List<Transaction>findByBook(Book book);
 
+    List<Transaction>findByLibraryCard_Student(Student student);
 }
