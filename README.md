@@ -1,5 +1,4 @@
 # Library_Management_System
-Tech Stack Used-> Java, Spring Boot, Hibernate, JPA, Tomcat, MySQL, Postman
 • Developed Library Management System, providing a comprehensive
 solution for Library administrators to efficiently manage books and
 student records.
