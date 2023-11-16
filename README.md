@@ -3,10 +3,10 @@
 
 ## Designed a Libra Track, offering a comprehensive solution for efficient administration of books and student records.
 
-## Implemented a smart data management, simplifying the retrieval of specific info about authors, genres, and publishers.
+## Enhanced user communication through Email integration. Entire architecture is constructed in a Monolithic way.
 
 ## Ensured smooth transactions for each student requires efficient management of their library card during book checkouts.
 
-## Enhanced user communication through Email integration. Entire architecture is constructed in a Monolithic way.
+## Implemented a smart data management, simplifying the retrieval of specific info about authors, books, Library cards.
 
 ## Developed various RESTful APIs to facilitate operations such as student and book additions and book searches.
