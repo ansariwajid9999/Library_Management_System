@@ -1,4 +1,4 @@
-# Libra Track  Tech Stack - Java , Postman , Hibernate , Java mail library , Spring Boot , Swagger , MySQl
+# Libra Track -> Tech Stack - Java , Postman , Hibernate , Java mail library , Spring Boot , Swagger , MySQl
 
 
 ## Designed a Libra Track, offering a comprehensive solution for efficient administration of books and student records.
